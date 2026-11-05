@@ -29,8 +29,8 @@ when an automated test in this repository exercises it.
 | Head, connect, response, idle and exchange timeouts | Tested |
 | Hop-by-hop and provenance header handling | Tested |
 | Stop on SIGTERM and SIGINT, without draining | Tested |
-| Docker image and Compose stack | Tested (run manually; CI build not yet run) |
-| GitHub Actions workflow | Unvalidated: has not run on GitHub yet |
+| Docker image and Compose stack | Tested |
+| GitHub Actions workflow | Tested |
 | Soak and high-load behaviour | Unvalidated: Milestone 7 |
 
 ## Milestone 2: Event-driven networking
