@@ -1,0 +1,33 @@
+# `docker compose up --build` runs the proxy in front of the example backend.
+# `docker compose run --rm dev` opens a shell with the toolchain and the source mounted.
+services:
+  proxy:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      target: runtime
+    ports:
+      - "8080:8080"
+    depends_on:
+      - backend
+
+  backend:
+    image: python:3.12-slim
+    command: ["python", "/app/server.py", "--host", "0.0.0.0"]
+    volumes:
+      - ./examples/backend-server:/app:ro
+
+  dev:
+    profiles: ["dev"]
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      target: dev
+    working_dir: /src
+    volumes:
+      - .:/src
+      - dev-venv:/src/.venv
+    command: ["bash"]
+
+volumes:
+  dev-venv:

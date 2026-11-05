@@ -1,0 +1,56 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  static-analysis:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/cache@v4
+        with:
+          path: ~/.conan2
+          key: conan-debug-${{ hashFiles('conan.lock', 'conan/profiles/*') }}
+      - run: scripts/bootstrap.sh debug
+      - run: .venv/bin/cmake --preset debug
+      - run: scripts/check.sh debug
+
+  test:
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        preset: [debug, release, asan]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/cache@v4
+        with:
+          path: ~/.conan2
+          key: conan-${{ matrix.preset }}-${{ hashFiles('conan.lock', 'conan/profiles/*') }}
+      - run: scripts/bootstrap.sh ${{ matrix.preset }}
+      - run: .venv/bin/cmake --preset ${{ matrix.preset }}
+      - run: .venv/bin/cmake --build --preset ${{ matrix.preset }}
+      - run: .venv/bin/ctest --preset ${{ matrix.preset }}
+
+  thread-sanitizer:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/cache@v4
+        with:
+          path: ~/.conan2
+          key: conan-tsan-${{ hashFiles('conan.lock', 'conan/profiles/*') }}
+      - run: scripts/bootstrap.sh tsan
+      - run: .venv/bin/cmake --preset tsan
+      # GCC 13's TSan runtime cannot map its shadow memory under high-entropy ASLR.
+      - run: setarch "$(uname -m)" -R .venv/bin/cmake --build --preset tsan
+      - run: setarch "$(uname -m)" -R .venv/bin/ctest --preset tsan
+
+  container:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker build --file docker/Dockerfile --target runtime --tag fluxgate:ci .

@@ -1,0 +1,8 @@
+# Exact versions of the Python-distributed developer tools. Installed into .venv
+# by scripts/bootstrap.sh so that no system packages or root access are needed.
+conan==2.34.0
+cmake==4.4.4
+ninja==1.13.2
+clang-format==23.1.5
+clang-tidy==23.1.4
+pytest==9.2.0

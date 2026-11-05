@@ -1,0 +1,6 @@
+/build/
+/.venv/
+/compile_commands.json
+/Testing/
+__pycache__/
+.pytest_cache/

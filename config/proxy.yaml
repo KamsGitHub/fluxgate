@@ -1,0 +1,28 @@
+# FluxGate configuration. Every value below other than upstream.host and
+# upstream.port is optional and shown at its default. Unknown keys are rejected.
+# Check a file without starting the proxy: fluxgate --config <file> --check-config
+
+listener:
+  address: 127.0.0.1
+  port: 8080         # 0 lets the OS pick; the chosen port is logged at startup.
+  backlog: 128
+
+upstream:            # Resolved once, at startup.
+  host: 127.0.0.1
+  port: 9000
+
+limits:
+  max_header_bytes: 16384           # Start line plus headers. Larger heads get 431.
+  max_headers: 100                  # More headers get 431.
+  max_request_body_bytes: 10485760  # Larger declared bodies get 413.
+  io_buffer_bytes: 65536            # Per direction, per connection.
+
+timeouts:
+  request_header_ms: 10000   # Accept to complete head; never extended. Then 408.
+  connect_ms: 2000           # Upstream TCP connect. Then 504.
+  response_header_ms: 30000  # Request sent to response head. Then 504.
+  idle_ms: 30000             # No bytes moved in either direction.
+  exchange_ms: 300000        # Hard cap on one complete exchange.
+
+logging:
+  level: info                # debug, info, warn or error.

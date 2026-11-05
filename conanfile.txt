@@ -1,0 +1,14 @@
+[requires]
+llhttp/9.3.0
+spdlog/1.15.3
+yaml-cpp/0.8.0
+
+[test_requires]
+gtest/1.17.0
+
+[generators]
+CMakeDeps
+CMakeToolchain
+
+[options]
+spdlog/*:header_only=False

@@ -1,0 +1,41 @@
+# Checks chosen for finding real defects. The disabled entries are style matters, or
+# conflict with deliberate patterns:
+#   bugprone-signed-bitwise: POSIX poll flags are signed by definition.
+#   performance-enum-size:   small state enums; no type here is packed for size.
+#   cert-err33-c:            failed CLI output has no better channel to report through.
+Checks: >
+  -*,
+  bugprone-*,
+  concurrency-*,
+  cert-*,
+  misc-*,
+  modernize-*,
+  performance-*,
+  readability-*,
+  -bugprone-easily-swappable-parameters,
+  -bugprone-signed-bitwise,
+  -cert-err33-c,
+  -cert-err58-cpp,
+  -misc-include-cleaner,
+  -misc-non-private-member-variables-in-classes,
+  -misc-use-internal-linkage,
+  -misc-const-correctness,
+  -modernize-raw-string-literal,
+  -modernize-use-trailing-return-type,
+  -performance-enum-size,
+  -performance-inefficient-string-concatenation,
+  -modernize-use-designated-initializers,
+  -readability-braces-around-statements,
+  -readability-trailing-comma,
+  -readability-function-cognitive-complexity,
+  -readability-identifier-length,
+  -readability-magic-numbers,
+  -readability-implicit-bool-conversion,
+  -readability-convert-member-functions-to-static
+WarningsAsErrors: '*'
+HeaderFilterRegex: 'include/fluxgate/.*'
+CheckOptions:
+  - key: readability-identifier-naming.ClassCase
+    value: CamelCase
+  - key: readability-identifier-naming.PrivateMemberSuffix
+    value: _
