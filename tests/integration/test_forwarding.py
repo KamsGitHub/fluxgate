@@ -185,6 +185,7 @@ def test_half_closed_client_still_gets_its_response(make_backend, start_proxy):
 def test_many_sequential_requests_leak_no_descriptors(make_backend, start_proxy):
     proxy = start_proxy(make_backend().port)
     send_request(proxy, GET)
+    proxy.wait_for_access_logs(1)  # The client gets EOF before lingering releases its socket.
     before = proxy.open_fds()
     for _ in range(300):
         assert status_of(send_request(proxy, GET)) == 200
